@@ -14,6 +14,10 @@ export interface User {
   bio?: string;
   rating?: number;
   reviewCount?: number;
+  whatsapp?: string;
+  phone?: string;
+  instagram?: string;
+  address?: string;
   // Professional specific
   profession?: string;
   isAvailable?: boolean;

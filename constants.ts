@@ -13,7 +13,10 @@ export const MOCK_USERS: User[] = [
     rating: 4.8,
     reviewCount: 124,
     isAvailable: true,
-    portfolio: ['https://picsum.photos/id/1019/300/300', 'https://picsum.photos/id/1020/300/300']
+    portfolio: ['https://picsum.photos/id/1019/300/300', 'https://picsum.photos/id/1020/300/300'],
+    whatsapp: '5511999999999',
+    phone: '(11) 99999-9999',
+    instagram: '@carlos.eletrica'
   },
   {
     id: 'u2',
@@ -25,7 +28,11 @@ export const MOCK_USERS: User[] = [
     coverImage: 'https://picsum.photos/id/1022/800/300',
     bio: 'Tudo para sua obra, do básico ao acabamento. Entrega rápida em toda região.',
     rating: 4.5,
-    reviewCount: 89
+    reviewCount: 89,
+    address: 'Av. das Construções, 1000 - Jardim Obras',
+    whatsapp: '5519988888888',
+    phone: '(19) 3333-4444',
+    instagram: '@construmais'
   },
   {
     id: 'u3',
@@ -34,6 +41,54 @@ export const MOCK_USERS: User[] = [
     location: 'Osasco, SP',
     avatar: 'https://picsum.photos/id/1025/150/150',
     bio: 'Reformando a casa dos sonhos.',
+  },
+  {
+    id: 'u4',
+    name: 'Elétrica Trovão',
+    role: UserRole.SUPPLIER,
+    storeType: 'Materiais Elétricos',
+    location: 'São Paulo, SP',
+    avatar: 'https://picsum.photos/id/1060/150/150',
+    coverImage: 'https://picsum.photos/id/1061/800/300',
+    bio: 'Especialistas em iluminação, fiação e automação residencial. As melhores marcas do mercado.',
+    rating: 4.9,
+    reviewCount: 210,
+    address: 'Rua da Luz, 45 - Centro',
+    whatsapp: '5511977777777',
+    phone: '(11) 3232-1010',
+    instagram: '@eletricatrovao'
+  },
+  {
+    id: 'u5',
+    name: 'Hidráulica Pura',
+    role: UserRole.SUPPLIER,
+    storeType: 'Hidráulica e Encanamento',
+    location: 'Guarulhos, SP',
+    avatar: 'https://picsum.photos/id/1070/150/150',
+    coverImage: 'https://picsum.photos/id/1071/800/300',
+    bio: 'Tubos, conexões, torneiras e louças sanitárias. Soluções completas para sua instalação hidráulica.',
+    rating: 4.7,
+    reviewCount: 56,
+    address: 'Av. das Águas, 200 - Vila Nova',
+    whatsapp: '5511966666666',
+    phone: '(11) 4040-5050',
+    instagram: '@hidraulicapura'
+  },
+  {
+    id: 'u6',
+    name: 'Casa das Tintas Cor & Arte',
+    role: UserRole.SUPPLIER,
+    storeType: 'Tintas e Acabamentos',
+    location: 'São Bernardo, SP',
+    avatar: 'https://picsum.photos/id/1080/150/150',
+    coverImage: 'https://picsum.photos/id/1081/800/300',
+    bio: 'Mistura de tintas na hora, acessórios para pintura e consultoria de cores gratuita.',
+    rating: 4.6,
+    reviewCount: 145,
+    address: 'Rua Colorida, 123 - Centro',
+    whatsapp: '5511955555555',
+    phone: '(11) 4343-2020',
+    instagram: '@casadastintas.abc'
   }
 ];
 

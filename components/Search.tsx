@@ -1,17 +1,33 @@
-import React, { useState } from 'react';
-import { Search as SearchIcon, MapPin, Filter, Star } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search as SearchIcon, MapPin, Filter, Star, Store, ArrowRight } from 'lucide-react';
 import { MOCK_USERS, MOCK_PRODUCTS } from '../constants';
 import { UserRole } from '../types';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 export const Search: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'PROFESSIONALS' | 'PRODUCTS'>('PROFESSIONALS');
+  const [activeTab, setActiveTab] = useState<'PROFESSIONALS' | 'STORES' | 'PRODUCTS'>('PROFESSIONALS');
   const [searchTerm, setSearchTerm] = useState('');
+  
+  const location = useLocation();
+
+  // Handle incoming state from navigation (e.g. selecting a specialty from Feed)
+  useEffect(() => {
+    if (location.state && location.state.category) {
+      setSearchTerm(location.state.category);
+      setActiveTab('PROFESSIONALS'); // Default to professionals when coming from "Chamar Profissional"
+    }
+  }, [location.state]);
 
   const filteredUsers = MOCK_USERS.filter(u => 
     u.role === UserRole.PROFESSIONAL && 
     (u.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
      u.profession?.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
+  const filteredStores = MOCK_USERS.filter(u => 
+    u.role === UserRole.SUPPLIER && 
+    (u.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+     u.storeType?.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const filteredProducts = MOCK_PRODUCTS.filter(p => 
@@ -24,15 +40,21 @@ export const Search: React.FC = () => {
       
       {/* Search Header */}
       <div className="sticky top-16 md:top-0 bg-[#f8fafc] dark:bg-slate-950 z-10 pb-4 transition-colors">
-        <div className="flex gap-2 mb-4 bg-gray-200 dark:bg-slate-800 p-1 rounded-lg w-fit transition-colors">
+        <div className="flex gap-2 mb-4 bg-gray-200 dark:bg-slate-800 p-1 rounded-lg w-fit transition-colors overflow-x-auto no-scrollbar max-w-full">
           <button 
-            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeTab === 'PROFESSIONALS' ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-white' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+            className={`px-4 py-1.5 rounded-md text-sm font-medium whitespace-nowrap transition-all ${activeTab === 'PROFESSIONALS' ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-white' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
             onClick={() => setActiveTab('PROFESSIONALS')}
           >
             Profissionais
           </button>
           <button 
-            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeTab === 'PRODUCTS' ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-white' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+            className={`px-4 py-1.5 rounded-md text-sm font-medium whitespace-nowrap transition-all ${activeTab === 'STORES' ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-white' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+            onClick={() => setActiveTab('STORES')}
+          >
+            Lojas
+          </button>
+          <button 
+            className={`px-4 py-1.5 rounded-md text-sm font-medium whitespace-nowrap transition-all ${activeTab === 'PRODUCTS' ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-white' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
             onClick={() => setActiveTab('PRODUCTS')}
           >
             Produtos
@@ -43,7 +65,11 @@ export const Search: React.FC = () => {
           <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
           <input 
             type="text" 
-            placeholder={activeTab === 'PROFESSIONALS' ? "Buscar pedreiro, eletricista..." : "Buscar cimento, tintas..."}
+            placeholder={
+              activeTab === 'PROFESSIONALS' ? "Buscar pedreiro, eletricista..." : 
+              activeTab === 'STORES' ? "Buscar loja de tintas, elétrica..." :
+              "Buscar cimento, ferramentas..."
+            }
             className="w-full pl-10 pr-12 py-3 rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-sm transition-colors"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -56,7 +82,7 @@ export const Search: React.FC = () => {
 
       {/* Results */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {activeTab === 'PROFESSIONALS' ? (
+        {activeTab === 'PROFESSIONALS' && (
           filteredUsers.map(user => (
             <Link to={`/profile`} key={user.id} className="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-slate-800 hover:shadow-md transition-shadow flex flex-col gap-3 group">
               <div className="flex items-start justify-between">
@@ -90,7 +116,46 @@ export const Search: React.FC = () => {
               </div>
             </Link>
           ))
-        ) : (
+        )}
+
+        {activeTab === 'STORES' && (
+          filteredStores.map(store => (
+            <Link to={`/profile`} key={store.id} className="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-slate-800 hover:shadow-md transition-shadow flex flex-col gap-3 group">
+              <div className="flex items-start justify-between">
+                <div className="flex gap-3">
+                  <img src={store.avatar} alt={store.name} className="w-12 h-12 rounded-lg object-cover border border-gray-100 dark:border-slate-800" />
+                  <div>
+                    <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">{store.name}</h3>
+                    <p className="text-sm text-gray-500 dark:text-slate-400 flex items-center gap-1">
+                      <Store size={12} /> {store.storeType}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1 bg-yellow-50 dark:bg-yellow-900/20 px-2 py-1 rounded-lg">
+                  <Star size={14} className="text-yellow-500 fill-current" />
+                  <span className="text-xs font-bold text-yellow-700 dark:text-yellow-400">{store.rating}</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-1 text-xs text-gray-400">
+                <MapPin size={14} />
+                {store.location}
+              </div>
+              
+              {store.bio && (
+                 <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">{store.bio}</p>
+              )}
+
+              <div className="mt-auto pt-3 border-t border-gray-50 dark:border-slate-800">
+                 <button className="w-full flex items-center justify-center gap-2 text-sm font-semibold text-orange-600 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 py-2 rounded-lg transition-colors">
+                   Ver Produtos <ArrowRight size={14} />
+                 </button>
+              </div>
+            </Link>
+          ))
+        )}
+
+        {activeTab === 'PRODUCTS' && (
           filteredProducts.map(product => (
             <div key={product.id} className="bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm border border-gray-100 dark:border-slate-800 hover:shadow-md transition-shadow">
               <div className="aspect-square bg-gray-100 dark:bg-slate-800 rounded-lg mb-3 overflow-hidden">
@@ -108,7 +173,9 @@ export const Search: React.FC = () => {
         )}
       </div>
       
-      {((activeTab === 'PROFESSIONALS' && filteredUsers.length === 0) || (activeTab === 'PRODUCTS' && filteredProducts.length === 0)) && (
+      {((activeTab === 'PROFESSIONALS' && filteredUsers.length === 0) || 
+        (activeTab === 'STORES' && filteredStores.length === 0) || 
+        (activeTab === 'PRODUCTS' && filteredProducts.length === 0)) && (
          <div className="text-center py-12 text-gray-400">
            <SearchIcon className="mx-auto mb-2 opacity-50" size={48} />
            <p>Nenhum resultado encontrado para "{searchTerm}"</p>
