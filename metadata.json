@@ -1,0 +1,9 @@
+{
+  "name": "Copy of Casa Pronta Já",
+  "description": "Uma plataforma social que conecta clientes, profissionais da construção civil e fornecedores de materiais.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}
